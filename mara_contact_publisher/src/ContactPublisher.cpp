@@ -17,23 +17,30 @@
 
 #include <gazebo/transport/transport.hh>
 #include <gazebo/msgs/msgs.hh>
+#include <gazebo/gazebo_client.hh>
+
 #include <gazebo_msgs/msg/contact_state.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
-#include <geometry_msgs/msg/wrench.hpp>
+
+#include <gazebo_ros/node.hpp>
+#include <gazebo/transport/Node.hh>
 
 #include <gazebo/gazebo_client.hh>
 
 #include <iostream>
 
-rclcpp::Publisher<gazebo_msgs::msg::ContactState> contacts_pub ;
+gazebo_ros::Node::SharedPtr ros_node;
+
+rclcpp::Publisher<gazebo_msgs::msg::ContactState>::SharedPtr contacts_pub ;
+
+gazebo::transport::NodePtr gz_node;
 
 // Function is called everytime a message is received.
 void cb(ConstContactsPtr &_msg)
 {
-  gazebo_msgs::ContactState contact;
-  geometry_msgs::Vector3 position;
-  geometry_msgs::Vector3 normals;
-  geometry_msgs::Wrench total_wrench;
+  gazebo_msgs::msg::ContactState contact;
+  geometry_msgs::msg::Vector3 position;
+  geometry_msgs::msg::Vector3 normals;
 
 
   if (_msg->contact_size() > 0){
@@ -41,7 +48,7 @@ void cb(ConstContactsPtr &_msg)
       contact.collision1_name = _msg->contact(0).collision1();
       contact.collision2_name = _msg->contact(0).collision2();
 
-      for (unsigned int j = 0; j <  _msg->contact(0).position_size(); ++j){
+      for (int j = 0; j <  _msg->contact(0).position_size(); ++j){
         contact.collision1_name = _msg->contact(0).collision1();
         contact.collision2_name = _msg->contact(0).collision2();
 
@@ -59,7 +66,7 @@ void cb(ConstContactsPtr &_msg)
       }
     }
   }
-  contacts_pub.publish(contact);
+  contacts_pub->publish(contact);
 
 }
 
@@ -69,17 +76,21 @@ int main(int argc, char ** argv)
   // Load gazebo
   gazebo::client::setup(argc, argv);
 
-  rclcpp::init(argc, argv);
-  ros_node = gazebo_ros::Node::Get();
+  if (!rclcpp::is_initialized()) {
+    rclcpp::init(argc, argv);
+    ros_node = gazebo_ros::Node::Get();
+  } else {
+    ros_node = gazebo_ros::Node::Get();
+  }
 
-	contacts_pub = ros_node.advertise<gazebo_msgs::ContactState>("gazebo_contacts", 1);
+  contacts_pub = ros_node->create_publisher<gazebo_msgs::msg::ContactState>("/gazebo_contacts");
 
-  // Create our node for communication
-  gazebo::transport::NodePtr node(new gazebo::transport::Node());
-  node->Init();
+  // Gazebo transport
+  gz_node = gazebo::transport::NodePtr(new gazebo::transport::Node());
+  gz_node->Init();
 
   // Listen to Gazebo world_stats topic
-  gazebo::transport::SubscriberPtr sub = node->Subscribe("/gazebo/default/physics/contacts", cb);
+  gazebo::transport::SubscriberPtr sub = gz_node->Subscribe("~/physics/contacts", cb);
 
   // Busy wait loop...replace with your own code as needed.
   while (true)

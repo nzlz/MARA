@@ -14,12 +14,14 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(gazebo_dev REQUIRED)
 find_package(gazebo_ros REQUIRED)
+find_package(gazebo_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 
 include_directories(include
   ${gazebo_dev_INCLUDE_DIRS}
   ${gazebo_ros_INCLUDE_DIRS}
+  ${gazebo_msgs_INCLUDE_DIRS}
   ${geometry_msgs_INCLUDE_DIRS}
 )
 link_directories(${gazebo_dev_LIBRARY_DIRS})
@@ -35,6 +37,9 @@ add_executable(${PROJECT_NAME}
 
 ament_target_dependencies(${PROJECT_NAME}
   "rclcpp"
+  "gazebo_dev"
+  "gazebo_ros"
+  "gazebo_msgs"
   "geometry_msgs"
 )
 
