@@ -1,7 +1,7 @@
 # MARA
 
 [![Build
-Status](https://travis-ci.org/AcutronicRobotics/MARA.svg?branch=master)](https://travis-ci.org/AcutronicRobotics/MARA)
+Status](https://travis-ci.org/AcutronicRobotics/MARA.svg?branch=crystal)](https://travis-ci.org/AcutronicRobotics/MARA)
 
 <a href="http://www.acutronicrobotics.com"><img src="https://acutronicrobotics.com/products/mara/images/xv2_MARA2-11.jpg.pagespeed.ic.QRaRP5N01r.webp" align="left" hspace="8" vspace="2" width="270"></a>
 <br/>
@@ -145,7 +145,7 @@ Create the workspace and download source files:
 ```sh
 mkdir -p ~/ros2_mara_ws/src
 cd ~/ros2_mara_ws
-wget https://raw.githubusercontent.com/acutronicrobotics/MARA/master/mara-ros2.repos
+wget https://raw.githubusercontent.com/acutronicrobotics/MARA/crystal/mara-ros2.repos
 vcs import src < mara-ros2.repos
 ```
 
@@ -275,7 +275,7 @@ ros2 run individual_trajectories_bridge individual_trajectories_bridge_actions -
 ### MoveIt! with MARA - Real Robot
 Plan trajectories in a real environment with MoveIt!.
 
-:warning: You will need to change the names of the real motors in [MARA/hros_cognition_mara_components](https://github.com/AcutronicRobotics/MARA/blob/master/hros_cognition_mara_components/config/motors.yaml#L10-L15) and in [MARA_ROS1/mara_bringup](https://github.com/AcutronicRobotics/MARA_ROS1/blob/master/mara_bringup/config/motors.yaml#L10-L15) files to match the MACs of your SoMs.
+:warning: You will need to change the names of the real motors in [MARA/hros_cognition_mara_components](https://github.com/AcutronicRobotics/MARA/blob/crystal/hros_cognition_mara_components/config/motors.yaml#L10-L15) and in [MARA_ROS1/mara_bringup](https://github.com/AcutronicRobotics/MARA_ROS1/blob/master/mara_bringup/config/motors.yaml#L10-L15) files to match the MACs of your SoMs.
 
 #### Terminal 1 (ROS 2.0)
 
